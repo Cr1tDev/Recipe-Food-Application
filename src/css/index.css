@@ -207,8 +207,8 @@ img {
 .hero-img {
   border-radius: 100%;
   object-fit: cover;
-  width: 480px;
-  min-height: 480px;
+  width: 450px;
+  min-height: 450px;
   /* filter: blur(10px); */
   /* opacity: 0.9; */
 }
@@ -1114,8 +1114,8 @@ footer {
 }
 
 .footer__social-icon {
-  width: 2rem;
-  height: 2rem;
+  width: 1.6rem;
+  height: 1.6rem;
   display: block;
 }
 

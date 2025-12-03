@@ -1,7 +1,14 @@
 import React from 'react';
+import AboutLayout from '../layouts/AboutLayout';
+import Promo from '../layouts/Promo';
 
 const AboutPage = () => {
-  return <div>AboutPage</div>;
+  return (
+    <>
+      <AboutLayout />
+      <Promo />
+    </>
+  );
 };
 
 export default AboutPage;

@@ -3,7 +3,8 @@ import breadIcon from '../assets/icons/breadIcon.png';
 import drinkIcon from '../assets/icons/drinkIcon.png';
 import cakeIcon from '../assets/icons/cakeIcon.png';
 import pizzaIcon from '../assets/icons/pizzaIcon.png';
-import Logo from '../components/common/Logo';
+import FollowSocials from './FollowSocials';
+import Logo from './common/Logo';
 
 const Footer = () => {
   return (
@@ -156,75 +157,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="footer__nav-column">
-              <h3 className="footer__title">Follow me</h3>
-              <ul className="footer__social">
-                <li className="footer__social-item">
-                  <a
-                    href="https://twitter.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer__social-link"
-                    aria-label="Follow us on Twitter"
-                  >
-                    <img
-                      className="footer__social-icon"
-                      src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/6501c88eb0eaccde56b0c14b_x-logo.png"
-                      alt="Twitter"
-                      loading="lazy"
-                    />
-                  </a>
-                </li>
-                <li className="footer__social-item">
-                  <a
-                    href="https://facebook.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer__social-link"
-                    aria-label="Follow us on Facebook"
-                  >
-                    <img
-                      className="footer__social-icon"
-                      src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/6501c88eb0eaccde56b0c149_icons8-facebook-240%20(1).png"
-                      alt="Facebook"
-                      loading="lazy"
-                    />
-                  </a>
-                </li>
-                <li className="footer__social-item">
-                  <a
-                    href="https://instagram.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer__social-link"
-                    aria-label="Follow us on Instagram"
-                  >
-                    <img
-                      className="footer__social-icon"
-                      src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/6501c88eb0eaccde56b0c157_social-4.png"
-                      alt="Instagram"
-                      loading="lazy"
-                    />
-                  </a>
-                </li>
-                <li className="footer__social-item">
-                  <a
-                    href="https://youtube.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer__social-link"
-                    aria-label="Follow us on YouTube"
-                  >
-                    <img
-                      className="footer__social-icon"
-                      src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/6501c88eb0eaccde56b0c143_social-3.png"
-                      alt="YouTube"
-                      loading="lazy"
-                    />
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <FollowSocials />
           </nav>
         </div>
       </div>
