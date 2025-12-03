@@ -1,0 +1,96 @@
+:root {
+  --color-green: #00693d;
+  --color-green-hover: #009e5c;
+  --color-white: #fff;
+  --font-size-md: 1.4rem;
+  --radius-sm: 0.6rem;
+  --transition-base: 0.3s;
+  --transition-ease: ease;
+  --spacing-xs: 0.6rem;
+}
+
+.contact-container {
+  display: inline;
+}
+
+.button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border: 0.2rem solid var(--color-green);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-green);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--transition-base) var(--transition-ease);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.button:hover {
+  color: var(--color-white);
+  background-color: var(--color-green-hover);
+  border-color: var(--color-green-hover);
+}
+
+.button__content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  position: relative;
+  z-index: 4;
+}
+
+.button__text {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+}
+
+.button__icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 0.4rem;
+}
+
+.button__icon {
+  width: 1.1rem;
+  transition: transform var(--transition-base) ease-in-out;
+}
+
+.button:hover .button__icon {
+  transform: translateX(0.3rem);
+}
+
+/* Light variant */
+.button--light {
+  color: var(--color-white);
+  border-color: var(--color-white);
+  background-color: transparent;
+}
+
+.button--light:hover {
+  background-color: var(--color-white);
+  color: var(--color-green);
+}
+
+.button--light:hover .button__icon {
+  filter: brightness(0) saturate(100%) invert(23%) sepia(89%) saturate(1234%)
+    hue-rotate(134deg) brightness(95%) contrast(101%);
+}
+
+@media (max-width: 768px) {
+  .button {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    font-size: 1rem;
+    padding: 1rem 1.8rem;
+  }
+}

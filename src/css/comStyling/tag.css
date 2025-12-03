@@ -1,0 +1,21 @@
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2.5rem;
+}
+
+.tag__bullet {
+  border-radius: 100%;
+  flex-shrink: 0;
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 2px solid #00693d;
+}
+
+.tag__text {
+  color: #00693d;
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.1;
+}

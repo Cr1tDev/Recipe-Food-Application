@@ -1,0 +1,9 @@
+.heading__highlight {
+  background-image: url(../../assets/svg/textSpark.svg);
+  color: #00693d;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  background-size: auto;
+  padding-left: 1rem;
+  display: inline;
+}
