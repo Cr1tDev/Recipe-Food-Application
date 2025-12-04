@@ -23,7 +23,6 @@ const Recipes = () => {
         });
 
         const data = await Promise.all(promises);
-        console.log(data);
 
         // Map TheMealDB data to the expected recipe format
         const mappedRecipes = data.map(result => {
@@ -33,7 +32,7 @@ const Recipes = () => {
             id: meal.idMeal,
             title: meal.strMeal,
             image: meal.strMealThumb,
-            category: [meal.strCategory.toLowerCase()],
+            category: meal.strCategory.toLowerCase(),
             summary:
               'A delicious and nutritious recipe you ll love. Food is any nourishing substance, usually of plant',
             readyInMinutes: 30,

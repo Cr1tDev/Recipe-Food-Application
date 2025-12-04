@@ -2,6 +2,8 @@ import React from 'react';
 import Home from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import MainLayout from './layouts/MainLayout';
+import RecipesPage from './pages/RecipesPage';
+import CategoryPage from './pages/CategoryPage';
 import {
   Route,
   createBrowserRouter,
@@ -14,6 +16,8 @@ const router = createBrowserRouter(
     <Route path="/" element={<MainLayout />}>
       <Route index element={<Home />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/recipes" element={<RecipesPage />} />
+      <Route path="/recipe-category/:category" element={<CategoryPage />} />
     </Route>
   )
 );

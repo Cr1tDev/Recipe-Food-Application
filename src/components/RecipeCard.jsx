@@ -1,65 +1,90 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // For client-side navigation
+import RecipeCardStats from './common/RecipeCardStats';
+import RecipeBadge from './common/RecipeBadge';
+
+// Category mapping configuration
+const CATEGORY_CONFIG = {
+  breakfast: {
+    name: 'Breakfast',
+    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2d1ff8db94df5297188_icons8-bread-240.png',
+    url: '/recipe-categories/breakfast',
+  },
+  lunch: {
+    name: 'Lunch',
+    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
+    url: '/recipe-categories/lunch',
+  },
+  dessert: {
+    name: 'Dessert',
+    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e33c6ae3d69baf126f5a_icons8-cake-240.png',
+    url: '/recipe-categories/dessert',
+  },
+  side: {
+    name: 'Side',
+    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e314a55677b935bd3113_icons8-the-toast-240.png',
+    url: '/recipe-categories/drink',
+  },
+  default: {
+    name: 'Lunch',
+    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
+    url: '/recipes',
+  },
+};
+
+// Helper function to get category info
+const getCategoryInfo = categoryString => {
+  if (!categoryString) return CATEGORY_CONFIG.default;
+
+  const normalizedCategory = categoryString;
+
+  if (normalizedCategory.includes('breakfast'))
+    return CATEGORY_CONFIG.breakfast;
+  if (
+    normalizedCategory.includes('lunch') ||
+    normalizedCategory.includes('main course')
+  )
+    return CATEGORY_CONFIG.lunch;
+  if (normalizedCategory.includes('dessert')) return CATEGORY_CONFIG.dessert;
+  if (
+    normalizedCategory.includes('side') ||
+    normalizedCategory.includes('drink')
+  )
+    return CATEGORY_CONFIG.side;
+
+  return CATEGORY_CONFIG.default;
+};
+
+// Helper function to determine difficulty
+const getDifficulty = minutes => {
+  if (minutes <= 20) return 'Easy';
+  if (minutes <= 45) return 'Medium';
+  return 'Hard';
+};
+
+// Helper function to format description
+const formatDescription = summary => {
+  if (!summary) return "A delicious and nutritious recipe you'll love.";
+  return summary.replace(/<[^>]*>/g, '').substring(0, 100) + '...';
+};
 
 const RecipeCard = ({ recipe }) => {
-  const getCategoryInfo = () => {
-    if (recipe.category?.includes('breakfast'))
-      return {
-        name: 'Breakfast',
-        icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2d1ff8db94df5297188_icons8-bread-240.png',
-        url: '/recipe-categories/breakfast',
-      };
-    if (
-      recipe.category?.includes('lunch') ||
-      recipe.category?.includes('main course')
-    )
-      return {
-        name: 'Lunch',
-        icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
-        url: '/recipe-categories/lunch',
-      };
-    if (recipe.category?.includes('dessert'))
-      return {
-        name: 'Dessert',
-        icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e33c6ae3d69baf126f5a_icons8-cake-240.png',
-        url: '/recipe-categories/dessert',
-      };
-    if (recipe.category?.includes('side') || recipe.category?.includes('drink'))
-      return {
-        name: 'Side',
-        icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e314a55677b935bd3113_icons8-the-toast-240.png',
-        url: '/recipe-categories/drink',
-      };
-    return {
-      name: 'Lunch',
-      icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
-      url: '/recipes',
-    };
-  };
-
-  const category = getCategoryInfo();
+  const category = getCategoryInfo(recipe.category);
   const readyInMinutes = recipe.readyInMinutes || 30;
   const servings = recipe.servings || 4;
-  const difficulty =
-    readyInMinutes <= 20 ? 'Easy' : readyInMinutes <= 45 ? 'Medium' : 'Hard';
+  const difficulty = getDifficulty(readyInMinutes);
   const title = recipe.title || 'Delicious Recipe';
-  const description = recipe.summary
-    ? recipe.summary.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
-    : "A delicious and nutritious recipe you'll love.";
+  const description = formatDescription(recipe.summary);
 
   return (
     <article className="recipe-card" data-recipe-id={recipe.id}>
       <div className="recipe-card__badge">
-        <a href={category.url} className="badge">
-          <img
-            className="badge__icon"
-            src={category.icon}
-            alt={category.name}
-          />
-          <span className="badge__text">{category.name}</span>
-        </a>
+        <Link to={category.url} className="recipe-card__link">
+          <RecipeBadge icon={category.icon} name={category.name} />
+        </Link>
       </div>
 
-      <a href={`/recipe/${recipe.id}`} className="recipe-card__link">
+      <Link to={`/recipe/${recipe.id}`} className="recipe-card__link">
         <div className="recipe-card__image-wrapper">
           <img
             className="recipe-card__image"
@@ -69,29 +94,11 @@ const RecipeCard = ({ recipe }) => {
           />
 
           <div className="recipe-card__info">
-            <div className="recipe-meta">
-              <img
-                className="recipe-meta__icon"
-                src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/650300cba3d8f08049ff6aed_schedule_FILL0_wght300_GRAD0_opsz24.svg"
-              />
-              <span className="recipe-meta__text">{readyInMinutes} Min</span>
-            </div>
-
-            <div className="recipe-meta">
-              <img
-                className="recipe-meta__icon"
-                src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/65030090282cb8dc8d551130_account_circle_FILL0_wght300_GRAD0_opsz24.svg"
-              />
-              <span className="recipe-meta__text">{servings} Servings</span>
-            </div>
-
-            <div className="recipe-meta">
-              <img
-                className="recipe-meta__icon"
-                src="https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c083/65030140cda3526d9edcd88b_signal_cellular_alt_FILL0_wght300_GRAD0_opsz24.svg"
-              />
-              <span className="recipe-meta__text">{difficulty}</span>
-            </div>
+            <RecipeCardStats
+              readyInMinutes={readyInMinutes}
+              servings={servings}
+              difficulty={difficulty}
+            />
           </div>
         </div>
 
@@ -103,7 +110,7 @@ const RecipeCard = ({ recipe }) => {
             <span className="link-underline__line"></span>
           </div>
         </div>
-      </a>
+      </Link>
     </article>
   );
 };
