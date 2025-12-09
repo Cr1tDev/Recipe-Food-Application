@@ -1,116 +1,91 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import '../css/recipes.css';
-import { useParams } from 'react-router-dom';
 import RecipeCardStats from '../components/common/RecipeCardStats';
 import Button from '../components/common/Button';
-
-// ------------------
-// Helper
-// ------------------
-function buildIngredients(meal) {
-  const ingredients = [];
-  for (let i = 1; i <= 20; i++) {
-    const ingredient = meal[`strIngredient${i}`];
-    const measure = meal[`strMeasure${i}`];
-
-    if (ingredient && ingredient.trim() !== '') {
-      ingredients.push({
-        ingredient: ingredient.trim(),
-        measure: measure?.trim() || '',
-      });
-    }
-  }
-  return ingredients;
-}
-
-function parseInstructions(instructions) {
-  // Split by blank lines
-  const parts = instructions
-    .split(/\r?\n\r?\n/) // split on double newlines
-    .map(p => p.trim())
-    .filter(Boolean); // remove empty lines
-
-  const steps = [];
-
-  for (let i = 0; i < parts.length; i += 2) {
-    const number = parseInt(parts[i], 10); // "1" → 1
-    const text = parts[i + 1] || '';
-
-    steps.push({
-      number,
-      text,
-    });
-  }
-
-  return steps;
-}
+import Loader from '../components/Loader';
+import ErrorMessage from '../components/ErrorMessage';
+import { fetchRecipeById } from '../utils/api';
+import { buildIngredients, parseInstructions } from '../utils/helpers';
 
 const RecipeView = () => {
   const { id } = useParams();
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const loadRecipe = async () => {
-      setLoading(true);
-      setError('');
+  const loadRecipe = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const res = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-        );
+    try {
+      const meal = await fetchRecipeById(id);
 
-        if (!res.ok) throw new Error('Failed to load recipe');
+      const formattedRecipe = {
+        id: meal.idMeal,
+        title: meal.strMeal,
+        category: meal.strCategory,
+        area: meal.strArea,
+        instructions: parseInstructions(meal.strInstructions),
+        image: meal.strMealThumb,
+        youtube: meal.strYoutube,
+        ingredients: buildIngredients(meal),
+      };
 
-        const { meals } = await res.json();
-        if (!meals) throw new Error('Recipe not found');
-
-        const meal = meals[0];
-
-        const correctedMeal = {
-          id: meal.idMeal,
-          title: meal.strMeal,
-          category: meal.strCategory,
-          area: meal.strArea,
-          instructions: parseInstructions(meal.strInstructions),
-          image: meal.strMealThumb,
-          youtube: meal.strYoutube,
-          ingredients: buildIngredients(meal),
-        };
-        console.log(correctedMeal);
-
-        setRecipe(correctedMeal);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadRecipe();
+      setRecipe(formattedRecipe);
+    } catch (err) {
+      setError(err.message || 'Failed to load recipe');
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
-  if (loading)
-    return (
-      <div className="container-wrapper">
-        <p>Loading recipe...</p>
-      </div>
-    );
+  useEffect(() => {
+    loadRecipe();
+  }, [loadRecipe]);
 
-  if (error)
+  const handleBack = useCallback(() => {
+    // Check if there's history to go back to
+    // If state.from exists (set when navigating from a list), go back
+    // Otherwise, navigate to recipes page as fallback
+    if (location.state?.from || window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/recipes', { replace: true });
+    }
+  }, [navigate, location.state]);
+
+  if (loading) {
     return (
       <div className="container-wrapper">
-        <p className="error">{error}</p>
+        <Loader />
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="container-wrapper">
+        <ErrorMessage message={error} />
+      </div>
+    );
+  }
+
+  if (!recipe) {
+    return (
+      <div className="container-wrapper">
+        <ErrorMessage message="Recipe not found" />
+      </div>
+    );
+  }
 
   return (
     <section className="recipe-section">
       <div className="container-wrapper">
         {/* BACK BUTTON */}
-        <button onClick={() => window.history.back()} className="back-button">
+        <button onClick={handleBack} className="back-button" type="button">
           ← Back
         </button>
 
@@ -118,7 +93,7 @@ const RecipeView = () => {
         <div className="main-card">
           {/* IMAGE */}
           <div className="main-card__image">
-            <img src={recipe.image} alt={recipe.title} />
+            <img src={recipe.image} alt={recipe.title} loading="lazy" />
           </div>
 
           {/* CONTENT */}
@@ -158,7 +133,7 @@ const RecipeView = () => {
 
             <ol className="ingredients-list">
               {recipe.ingredients.map((item, index) => (
-                <li key={index}>
+                <li key={`${item.ingredient}-${index}`}>
                   {item.measure} {item.ingredient}
                 </li>
               ))}

@@ -1,37 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 import Tag from '../components/common/Tag';
 import TextSpark from '../components/common/TextSpark';
-
-const CATEGORIES = [
-  {
-    id: 'breakfast',
-    name: 'Breakfast',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2d1ff8db94df5297188_icons8-bread-240.png',
-    link: '/recipe-category/breakfast',
-  },
-  {
-    id: 'lunch',
-    name: 'Lunch',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
-    link: '/recipe-category/lunch',
-  },
-  {
-    id: 'side',
-    name: 'Side',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e314a55677b935bd3113_icons8-the-toast-240.png',
-    link: '/recipe-category/side',
-  },
-  {
-    id: 'dessert',
-    name: 'Dessert',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e33c6ae3d69baf126f5a_icons8-cake-240.png',
-    link: '/recipe-category/dessert',
-  },
-];
+import { CATEGORIES } from '../utils/constants';
 
 const CategoryCard = ({ category }) => (
-  <a href={category.link}>
+  <Link to={category.link}>
     <article className="category-card">
       <div
         className="category-card__link"
@@ -46,7 +20,7 @@ const CategoryCard = ({ category }) => (
         <h3 className="category-card__title">{category.name}</h3>
       </div>
     </article>
-  </a>
+  </Link>
 );
 
 const Category = () => {
@@ -63,7 +37,7 @@ const Category = () => {
         </div>
         <div className="category-content">
           <div className="categories">
-            {CATEGORIES.map(category => (
+            {CATEGORIES.map((category) => (
               <CategoryCard key={category.id} category={category} />
             ))}
           </div>

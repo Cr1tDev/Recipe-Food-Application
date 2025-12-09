@@ -1,8 +1,6 @@
 import React from 'react';
-import breadIcon from '../assets/icons/breadIcon.png';
-import drinkIcon from '../assets/icons/drinkIcon.png';
-import cakeIcon from '../assets/icons/cakeIcon.png';
-import pizzaIcon from '../assets/icons/pizzaIcon.png';
+import { Link } from 'react-router-dom';
+import { CATEGORIES } from '../utils/constants';
 import FollowSocials from './FollowSocials';
 import Logo from './common/Logo';
 
@@ -62,39 +60,19 @@ const Footer = () => {
               <h3 className="footer__title">Navigation</h3>
               <ul className="footer__nav--list">
                 <li className="footer__nav--item">
-                  <a href="/" className="footer__link" data-link>
+                  <Link to="/" className="footer__link">
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer__nav-item">
-                  <a href="/about-me" className="footer__link" data-link>
+                  <Link to="/about" className="footer__link">
                     About me
-                  </a>
+                  </Link>
                 </li>
                 <li className="footer__nav-item">
-                  <a href="/shop" className="footer__link" data-link>
-                    Shop
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a href="/recipe" className="footer__link" data-link>
+                  <Link to="/recipes" className="footer__link">
                     Recipes
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a href="/style-guide" className="footer__link" data-link>
-                    Style Guide
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a href="/licensing" className="footer__link" data-link>
-                    Licensing
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a href="/legal" className="footer__link" data-link>
-                    Legal
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -102,58 +80,22 @@ const Footer = () => {
             <div className="footer__nav-column">
               <h3 className="footer__title">Categories</h3>
               <ul className="footer__nav--list">
-                <li className="footer__nav-item">
-                  <a
-                    href="/recipe-categories/dessert"
-                    className="footer__link footer__link--icon"
-                  >
-                    <img
-                      className="footer__link-icon"
-                      src={cakeIcon}
-                      alt="Cake icon"
-                    />
-                    <span>Dessert</span>
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a
-                    href="/recipe-categories/drink"
-                    className="footer__link footer__link--icon"
-                  >
-                    <img
-                      className="footer__link-icon"
-                      src={drinkIcon}
-                      alt="Drink icon"
-                    />
-                    <span>Drink</span>
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a
-                    href="/recipe-categories/lunch"
-                    className="footer__link footer__link--icon"
-                  >
-                    <img
-                      className="footer__link-icon"
-                      src={pizzaIcon}
-                      alt="Pizza icon"
-                    />
-                    <span>Lunch</span>
-                  </a>
-                </li>
-                <li className="footer__nav-item">
-                  <a
-                    href="/recipe-categories/breakfast"
-                    className="footer__link footer__link--icon"
-                  >
-                    <img
-                      className="footer__link-icon"
-                      src={breadIcon}
-                      alt="Bread icon"
-                    />
-                    <span>Breakfast</span>
-                  </a>
-                </li>
+                {CATEGORIES.map((category) => (
+                  <li key={category.id} className="footer__nav-item">
+                    <Link
+                      to={category.link}
+                      className="footer__link footer__link--icon"
+                    >
+                      <img
+                        className="footer__link-icon"
+                        src={category.icon}
+                        alt=""
+                        aria-hidden="true"
+                      />
+                      <span>{category.name}</span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 

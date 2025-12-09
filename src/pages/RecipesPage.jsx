@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import TextSpark from '../components/common/TextSpark';
 import sampleRecipe from '../assets/image/sample.jpg';
 import Button from '../components/common/Button';
@@ -29,33 +29,61 @@ const RecipesPage = () => {
 
   // --- Local State ---
   const [searchInput, setSearchInput] = useState('');
+
   // --- Handle Search ---
-  const handleSearchSubmit = e => {
-    e.preventDefault();
+  const handleSearchSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    const trimmed = searchInput.trim();
+      const trimmed = searchInput.trim();
 
-    // If search input is empty → reset search and show random recipes
-    if (!trimmed) {
-      handleSearch('');
-      return;
-    }
+      // If search input is empty → reset search and show random recipes
+      if (!trimmed) {
+        handleSearch('');
+        return;
+      }
 
-    handleSearch(trimmed);
-  };
+      handleSearch(trimmed);
+    },
+    [searchInput, handleSearch]
+  );
+
+  const handleInputChange = useCallback((e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    // Update search query in real-time for debounced search
+    handleSearch(value);
+  }, [handleSearch]);
 
   // --- Derived UI State ---
-  const isSearching = searchInput.trim().length > 0;
-  const recipesToShow = isSearching ? searchResults : randomRecipes;
+  const isSearching = useMemo(
+    () => searchInput.trim().length > 0,
+    [searchInput]
+  );
 
-  const isLoadingToShow = isSearching ? isSearchLoading : isRandomLoading;
-  const errorToShow = isSearching ? searchError : randomError;
+  const recipesToShow = useMemo(
+    () => (isSearching ? searchResults : randomRecipes),
+    [isSearching, searchResults, randomRecipes]
+  );
 
-  const showNoResults =
-    isSearching &&
-    !isSearchLoading &&
-    searchResults.length === 0 &&
-    !searchError;
+  const isLoadingToShow = useMemo(
+    () => (isSearching ? isSearchLoading : isRandomLoading),
+    [isSearching, isSearchLoading, isRandomLoading]
+  );
+
+  const errorToShow = useMemo(
+    () => (isSearching ? searchError : randomError),
+    [isSearching, searchError, randomError]
+  );
+
+  const showNoResults = useMemo(
+    () =>
+      isSearching &&
+      !isSearchLoading &&
+      searchResults.length === 0 &&
+      !searchError,
+    [isSearching, isSearchLoading, searchResults.length, searchError]
+  );
 
   return (
     <>
@@ -67,7 +95,7 @@ const RecipesPage = () => {
 
           <div className="main-card">
             <div className="main-card__image">
-              <img src={sampleRecipe} alt="Recipe" />
+              <img src={sampleRecipe} alt="Tropical sunset margarita" loading="lazy" />
             </div>
 
             <div className="main-card__content">
@@ -86,7 +114,7 @@ const RecipesPage = () => {
               </p>
 
               <div className="main-card__button">
-                <Button color="green">View Recipe</Button>
+                <Button color="green" href="/recipes">View Recipe</Button>
               </div>
             </div>
           </div>
@@ -105,7 +133,8 @@ const RecipesPage = () => {
                 type="search"
                 placeholder="Search recipes..."
                 value={searchInput}
-                onChange={e => setSearchInput(e.target.value)}
+                onChange={handleInputChange}
+                aria-label="Search recipes"
               />
               <button type="submit">Search</button>
             </form>
@@ -126,11 +155,8 @@ const RecipesPage = () => {
               {/* Recipe List */}
               {!isLoadingToShow && !errorToShow && !showNoResults && (
                 <div className="container__card">
-                  {recipesToShow.map(recipe => (
-                    <RecipeCard
-                      key={recipe.idMeal || recipe.id}
-                      recipe={recipe}
-                    />
+                  {recipesToShow.map((recipe) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} />
                   ))}
                 </div>
               )}

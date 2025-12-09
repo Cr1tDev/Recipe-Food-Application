@@ -1,14 +1,11 @@
 import React from 'react';
-import spinnerIcon from '../assets/svg/spinnerIcon.svg';
 import styles from './Loader.module.css';
 
 const Loader = () => {
   return (
-    <div className={styles.spinner}>
-      Loading...
-      <svg className={styles.spinnerIcon}>
-        <img href={`${spinnerIcon}#icon-loader`} />
-      </svg>
+    <div className={styles.spinner} role="status" aria-label="Loading">
+      <div className={styles.spinnerIcon} aria-hidden="true"></div>
+      <span className={styles.spinnerText}>Loading...</span>
     </div>
   );
 };

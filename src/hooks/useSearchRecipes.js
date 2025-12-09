@@ -1,12 +1,19 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { searchRecipes, mapMealToRecipe } from '../utils/api';
 
+/**
+ * Custom hook for searching recipes with debouncing
+ * @param {string} initialQuery - Initial search query (default: '')
+ * @returns {Object} Object containing recipes, isLoading, error, query, and handleSearch
+ */
 const useSearchRecipes = (initialQuery = '') => {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState(initialQuery);
+  const debounceTimeoutRef = useRef(null);
 
-  const fetchRecipes = useCallback(async searchTerm => {
+  const fetchRecipes = useCallback(async (searchTerm) => {
     const cleanedTerm = searchTerm.trim();
 
     // Reset search if empty
@@ -21,34 +28,12 @@ const useSearchRecipes = (initialQuery = '') => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
-          cleanedTerm
-        )}`
-      );
+      const meals = await searchRecipes(cleanedTerm);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch recipes');
-      }
+      // Map meals to recipe format
+      const mappedRecipes = meals.map(mapMealToRecipe).filter(Boolean);
 
-      const { meals } = await response.json();
-
-      const mappedRecipes = meals.map(result => {
-        const meal = result;
-
-        return {
-          id: meal.idMeal,
-          title: meal.strMeal,
-          image: meal.strMealThumb,
-          category: meal.strCategory.toLowerCase(),
-          summary:
-            'A delicious and nutritious recipe you’ll love. Food is any nourishing substance, usually of plant',
-          readyInMinutes: 30,
-          servings: 4,
-        };
-      });
-
-      setRecipes(mappedRecipes || []);
+      setRecipes(mappedRecipes);
     } catch (err) {
       setError(err.message || 'Failed to fetch recipes');
       setRecipes([]);
@@ -57,16 +42,30 @@ const useSearchRecipes = (initialQuery = '') => {
     }
   }, []);
 
-  // Trigger search whenever query changes
+  // Trigger search with debouncing whenever query changes
   useEffect(() => {
-    fetchRecipes(query);
+    // Clear previous timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    // Set new timeout for debounced search
+    debounceTimeoutRef.current = setTimeout(() => {
+      fetchRecipes(query);
+    }, 300);
+
+    // Cleanup function
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
   }, [query, fetchRecipes]);
 
   // Exposed function for components
-  const handleSearch = value => {
+  const handleSearch = useCallback((value) => {
     setQuery(value);
-    console.log(value.length);
-  };
+  }, []);
 
   return {
     recipes,

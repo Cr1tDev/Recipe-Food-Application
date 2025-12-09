@@ -15,7 +15,7 @@ const AboutLayout = () => {
           <div className="about-container">
             <div className="about-heading">
               <Tag position="right" color="green">
-                Abut me
+                About me
               </Tag>
               <h2
                 className="about-text"

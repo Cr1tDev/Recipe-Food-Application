@@ -1,19 +1,34 @@
 .spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
   margin: 5rem auto;
+  padding: 3rem;
   text-align: center;
   grid-area: 1/2;
 }
 
 .spinnerIcon {
-  height: 5rem;
   width: 5rem;
-  fill: green;
-  animation: rotate 2s infinite linear;
+  height: 5rem;
+  border: 4px solid #e5e5e5;
+  border-top: 4px solid var(--color-green, #00693d);
+  border-radius: 50%;
+  animation: rotate 1s infinite linear;
+}
+
+.spinnerText {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #555;
+  font-family: 'Inter', sans-serif;
 }
 
 @keyframes rotate {
   0% {
-    transform: rotate(0);
+    transform: rotate(0deg);
   }
 
   100% {

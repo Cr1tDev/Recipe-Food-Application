@@ -22,27 +22,26 @@ const Hero = () => {
               Discover the art of cooking nutritious and mouthwatering dishes
               with me.
             </p>
-            <Button color="green" href="#">
+            <Button color="green" href="/recipes">
               All Recipes
             </Button>
           </div>
 
           <div className="hero-container__image">
-            <img className="hero-img" src={heroImg} alt="cooking" />
-            <a
-              href="#"
+            <img className="hero-img" src={heroImg} alt="cooking" loading="lazy" />
+            <button
+              type="button"
               className="hero__play-button"
               aria-label="Play introduction video"
-              data-link=""
             >
               <img
                 className="hero__play-icon"
                 src={playIcon}
-                alt="play logo"
+                alt=""
                 aria-hidden="true"
                 loading="lazy"
               />
-            </a>
+            </button>
           </div>
         </div>
       </div>

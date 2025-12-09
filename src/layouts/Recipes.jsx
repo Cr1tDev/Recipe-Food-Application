@@ -17,7 +17,7 @@ const Recipes = () => {
           <h2 className="recipes-header">
             Latest<TextSpark>recipes.</TextSpark>
           </h2>
-          <Button color="green" href="#">
+          <Button color="green" href="/recipes">
             All Recipes
           </Button>
         </div>
@@ -25,6 +25,7 @@ const Recipes = () => {
           <div className="recipe-tabs">
             <button
               className="tabs__button tabs__button--active"
+              type="button"
               role="tab"
               aria-selected="true"
               aria-controls="latest-recipes"
@@ -34,25 +35,30 @@ const Recipes = () => {
 
             <button
               className="tabs__button"
+              type="button"
               aria-selected="false"
               aria-controls="featured-recipes"
             >
               <img
                 className="tabs__icon"
                 src={BookmarkIcon}
-                alt="Featured Icon"
+                alt=""
+                aria-hidden="true"
               />
               Featured Recipes
             </button>
           </div>
           <div className="recipe-container__card">
             {isLoading && <Loader />}
-            {!isLoading && !error && (
+            {!isLoading && !error && recipes.length > 0 && (
               <div className="container__card">
-                {recipes.map(recipe => (
+                {recipes.map((recipe) => (
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
               </div>
+            )}
+            {!isLoading && !error && recipes.length === 0 && (
+              <p>No recipes available at the moment.</p>
             )}
             {error && <ErrorMessage message={error} />}
           </div>

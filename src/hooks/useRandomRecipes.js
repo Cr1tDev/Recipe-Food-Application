@@ -1,50 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { fetchRandomRecipe, mapMealToRecipe } from '../utils/api';
 
+/**
+ * Custom hook to fetch random recipes
+ * @param {number} count - Number of random recipes to fetch (default: 6)
+ * @returns {Object} Object containing recipes, isLoading, and error
+ */
 export default function useRandomRecipes(count = 6) {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        setIsLoading(true);
+  const fetchRecipes = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        const promises = Array.from({ length: count }, async () => {
-          const res = await fetch(
-            'https://www.themealdb.com/api/json/v1/1/random.php'
-          );
-          return await res.json();
-        });
+      // Fetch all random recipes in parallel
+      const promises = Array.from({ length: count }, () => fetchRandomRecipe());
+      const meals = await Promise.all(promises);
 
-        const data = await Promise.all(promises);
+      // Filter out null values and map to recipe format
+      const mappedRecipes = meals
+        .filter(Boolean)
+        .map(mapMealToRecipe)
+        .filter(Boolean);
 
-        const mappedRecipes = data.map(result => {
-          const meal = result.meals[0];
-
-          return {
-            id: meal.idMeal,
-            title: meal.strMeal,
-            image: meal.strMealThumb,
-            category: meal.strCategory.toLowerCase(),
-            summary:
-              'A delicious and nutritious recipe you’ll love. Food is any nourishing substance, usually of plant',
-            readyInMinutes: 30,
-            servings: 4,
-          };
-        });
-
-        setRecipes(mappedRecipes);
-      } catch (err) {
-        setError('Failed to fetch recipes. Please try again later.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecipes();
+      setRecipes(mappedRecipes);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to fetch recipes. Please try again later.');
+      setRecipes([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, [count]);
+
+  useEffect(() => {
+    fetchRecipes();
+  }, [fetchRecipes]);
 
   return { recipes, isLoading, error };
 }

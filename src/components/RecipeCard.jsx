@@ -1,80 +1,66 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // For client-side navigation
+import React, { useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import RecipeCardStats from './common/RecipeCardStats';
 import RecipeBadge from './common/RecipeBadge';
+import { CATEGORY_CONFIG } from '../utils/constants';
+import { getDifficulty, formatDescription } from '../utils/helpers';
 
-// Category mapping configuration
-const CATEGORY_CONFIG = {
-  breakfast: {
-    name: 'Breakfast',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2d1ff8db94df5297188_icons8-bread-240.png',
-    url: '/recipe-categories/breakfast',
-  },
-  lunch: {
-    name: 'Lunch',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
-    url: '/recipe-categories/lunch',
-  },
-  dessert: {
-    name: 'Dessert',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e33c6ae3d69baf126f5a_icons8-cake-240.png',
-    url: '/recipe-categories/dessert',
-  },
-  side: {
-    name: 'Side',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e314a55677b935bd3113_icons8-the-toast-240.png',
-    url: '/recipe-categories/drink',
-  },
-  default: {
-    name: 'Lunch',
-    icon: 'https://cdn.prod.website-files.com/6501c88eb0eaccde56b0c089/6502e2f3fbcadab05d250a8b_icons8-pizza-240.png',
-    url: '/recipes',
-  },
-};
-
-// Helper function to get category info
-const getCategoryInfo = categoryString => {
+/**
+ * Gets category info from category string
+ * @param {string} categoryString - Category string
+ * @returns {Object} Category configuration object
+ */
+const getCategoryInfo = (categoryString) => {
   if (!categoryString) return CATEGORY_CONFIG.default;
 
-  const normalizedCategory = categoryString;
+  const normalizedCategory = categoryString.toLowerCase();
 
-  if (normalizedCategory.includes('breakfast'))
+  if (normalizedCategory.includes('breakfast')) {
     return CATEGORY_CONFIG.breakfast;
+  }
   if (
     normalizedCategory.includes('lunch') ||
-    normalizedCategory.includes('main course')
-  )
+    normalizedCategory.includes('main course') ||
+    normalizedCategory.includes('beef')
+  ) {
     return CATEGORY_CONFIG.lunch;
-  if (normalizedCategory.includes('dessert')) return CATEGORY_CONFIG.dessert;
+  }
+  if (normalizedCategory.includes('dessert')) {
+    return CATEGORY_CONFIG.dessert;
+  }
   if (
     normalizedCategory.includes('side') ||
     normalizedCategory.includes('drink')
-  )
+  ) {
     return CATEGORY_CONFIG.side;
+  }
 
   return CATEGORY_CONFIG.default;
 };
 
-// Helper function to determine difficulty
-const getDifficulty = minutes => {
-  if (minutes <= 20) return 'Easy';
-  if (minutes <= 45) return 'Medium';
-  return 'Hard';
-};
-
-// Helper function to format description
-const formatDescription = summary => {
-  if (!summary) return "A delicious and nutritious recipe you'll love.";
-  return summary.replace(/<[^>]*>/g, '').substring(0, 100) + '...';
-};
-
 const RecipeCard = ({ recipe }) => {
-  const category = getCategoryInfo(recipe.category);
+  const location = useLocation();
+  const category = useMemo(
+    () => getCategoryInfo(recipe.category),
+    [recipe.category]
+  );
+
   const readyInMinutes = recipe.readyInMinutes || 30;
   const servings = recipe.servings || 4;
-  const difficulty = getDifficulty(readyInMinutes);
+  const difficulty = useMemo(
+    () => getDifficulty(readyInMinutes),
+    [readyInMinutes]
+  );
   const title = recipe.title || 'Delicious Recipe';
-  const description = formatDescription(recipe.summary);
+  const description = useMemo(
+    () => formatDescription(recipe.summary),
+    [recipe.summary]
+  );
+
+  // Pass current location as state so back button knows where to return
+  const recipeLinkState = {
+    from: location.pathname,
+  };
 
   return (
     <article className="recipe-card" data-recipe-id={recipe.id}>
@@ -84,7 +70,11 @@ const RecipeCard = ({ recipe }) => {
         </Link>
       </div>
 
-      <Link to={`/recipe/${recipe.id}`} className="recipe-card__link">
+      <Link
+        to={`/recipe/${recipe.id}`}
+        state={recipeLinkState}
+        className="recipe-card__link"
+      >
         <div className="recipe-card__image-wrapper">
           <img
             className="recipe-card__image"
@@ -115,4 +105,4 @@ const RecipeCard = ({ recipe }) => {
   );
 };
 
-export default RecipeCard;
+export default React.memo(RecipeCard);
