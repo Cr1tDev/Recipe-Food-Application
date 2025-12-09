@@ -1,56 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import TextSpark from '../components/common/TextSpark';
 import Button from '../components/common/Button';
 import RecipeCard from '../components/RecipeCard';
 import BookmarkIcon from '../assets/icons/BookmarkIcon.png';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
+import useRandomRecipes from '../hooks/useRandomRecipes';
 
 const Recipes = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        setIsLoading(true);
-        const promises = Array.from({ length: 6 }, async function () {
-          const res = await fetch(
-            'https://www.themealdb.com/api/json/v1/1/random.php'
-          );
-          return await res.json();
-        });
-
-        const data = await Promise.all(promises);
-
-        // Map TheMealDB data to the expected recipe format
-        const mappedRecipes = data.map(result => {
-          const meal = result.meals[0];
-
-          return {
-            id: meal.idMeal,
-            title: meal.strMeal,
-            image: meal.strMealThumb,
-            category: meal.strCategory.toLowerCase(),
-            summary:
-              'A delicious and nutritious recipe you ll love. Food is any nourishing substance, usually of plant',
-            readyInMinutes: 30,
-            servings: 4,
-          };
-        });
-
-        setRecipes(mappedRecipes);
-      } catch (err) {
-        setError('Failed to fetch recipes. Please try again later.');
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecipes();
-  }, []);
+  const { recipes, isLoading, error } = useRandomRecipes(6);
 
   return (
     <section className="recipes">

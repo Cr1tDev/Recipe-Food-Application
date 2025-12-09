@@ -1,0 +1,22 @@
+.spinner {
+  margin: 5rem auto;
+  text-align: center;
+  grid-area: 1/2;
+}
+
+.spinnerIcon {
+  height: 5rem;
+  width: 5rem;
+  fill: green;
+  animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

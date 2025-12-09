@@ -1,3 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  --color-green: #00693d;
+  --color-green-hover: #009e5c;
+  --color-white: #fff;
+  --font-size-md: 1.4rem;
+  --radius-sm: 0.6rem;
+  --transition-base: 0.3s;
+  --transition-ease: ease;
+  --spacing-xs: 0.6rem;
+}
+
 .recipe-section {
   padding: 4rem 0;
   margin: 5rem 0;
@@ -57,4 +70,164 @@
 
 .main-card__button {
   margin-top: 5rem;
+}
+
+.min-stats__card {
+  display: flex;
+  gap: 10px;
+}
+
+/* Search bar */
+.searchbar-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 6px;
+}
+
+.searchbar-container input {
+  flex: 1;
+  padding: 1.2rem 2rem;
+  border: 1px solid #c7e6cb;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  background: #ffffff;
+  transition: border 0.2s ease;
+}
+
+.searchbar-container input:focus {
+  outline: none;
+  border-color: #8ed8a7;
+}
+
+.searchbar-container button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border: 0.2rem solid var(--color-green);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-green);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--transition-base) var(--transition-ease);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.searchbar-container button:hover {
+  color: var(--color-white);
+  background-color: var(--color-green-hover);
+  border-color: var(--color-green-hover);
+}
+
+/* ================================
+   INSTRUCTION SECTION CONTAINER
+================================ */
+.instruction-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Make responsive */
+@media (max-width: 768px) {
+  .instruction-container {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+}
+
+/* ================================
+   SECTION HEADINGS
+================================ */
+.recipe-heading {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #00693d; /* your theme green */
+}
+
+/* ================================
+   INGREDIENTS LIST
+================================ */
+.ingredients-list,
+.preparation-list {
+  /* list-style: none; */
+  padding-left: 0;
+  margin-top: 1rem;
+  margin-left: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-green);
+  line-height: 1.4;
+}
+
+.ingredients-list li,
+.preparation-list li {
+  margin-bottom: 0.55rem;
+  padding-left: 0.5rem;
+  position: relative;
+}
+
+/* Custom bullet (nice round dot) */
+/* .ingredients-list li::before,
+.preparation-list li::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 0;
+  top: 8px;
+  background: #00693d;
+  border-radius: 50%;
+} */
+
+/* ================================
+   INDIVIDUAL SECTION BLOCK STYLES
+================================ */
+.ingredients-container,
+.preparation-container,
+.history-container {
+  padding: 1.5rem 3rem;
+  border-radius: 0.75rem;
+  background: #fafafa;
+  border: 1px solid #eee;
+  transition: 0.3s ease;
+}
+
+/* subtle hover */
+.ingredients-container:hover,
+.preparation-container:hover,
+.history-container:hover {
+  background: #f5fdf8;
+  border-color: #d2f0df;
+}
+
+/* ================================
+   TEXT PARAGRAPHS
+================================ */
+.ingredients-container p,
+.preparation-container p,
+.history-container p {
+  font-size: 1.3rem;
+  color: #919191;
+  font-weight: 600;
+  width: 70%;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.step-number {
+  margin-right: 3px;
 }

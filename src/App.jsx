@@ -4,6 +4,7 @@ import AboutPage from './pages/AboutPage';
 import MainLayout from './layouts/MainLayout';
 import RecipesPage from './pages/RecipesPage';
 import CategoryPage from './pages/CategoryPage';
+import RecipeView from './pages/RecipeView';
 import {
   Route,
   createBrowserRouter,
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route path="/about" element={<AboutPage />} />
       <Route path="/recipes" element={<RecipesPage />} />
       <Route path="/recipe-category/:category" element={<CategoryPage />} />
+      <Route path="/recipe/:id" element={<RecipeView />} />
     </Route>
   )
 );
