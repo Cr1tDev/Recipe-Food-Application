@@ -2,7 +2,7 @@ import React from 'react';
 import TextSpark from '../components/common/TextSpark';
 import Button from '../components/common/Button';
 import RecipeCard from '../components/RecipeCard';
-import BookmarkIcon from '../assets/icons/BookmarkIcon.png';
+import BookmarkIcon from '../assets/icons/bookmarkIcon.png';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import useRandomRecipes from '../hooks/useRandomRecipes';
@@ -52,7 +52,7 @@ const Recipes = () => {
             {isLoading && <Loader />}
             {!isLoading && !error && recipes.length > 0 && (
               <div className="container__card">
-                {recipes.map((recipe) => (
+                {recipes.map(recipe => (
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
               </div>
